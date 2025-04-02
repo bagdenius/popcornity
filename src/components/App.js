@@ -39,34 +39,47 @@ export default function App() {
 
   useEffect(
     function () {
+      const abortController = new AbortController();
+
       async function getMovies() {
         try {
           setIsLoading(true);
           setError(``);
+
           const response = await fetch(
-            `${OMDB_GET_REQUEST_URL}&s=${searchQuery}`
+            `${OMDB_GET_REQUEST_URL}&s=${searchQuery}`,
+            { signal: abortController.signal }
           );
           if (!response.ok) {
             throw new Error(
               `An error occured while movies fetching! (code ${response.status})`
             );
           }
+
           const data = await response.json();
           if (data.Response === `False`) throw new Error(data.Error);
           setMovies(data.Search);
+          setError(``);
         } catch (error) {
-          console.error(error.message);
-          setError(error.message);
+          if (error.name !== `AbortError`) {
+            console.log(error.message);
+            setError(error.message);
+          }
         } finally {
           setIsLoading(false);
         }
       }
+
       if (searchQuery.length < 3) {
         setMovies([]);
         setError(``);
         return;
       }
+      handleCloseMovieDetails();
       getMovies();
+      return function () {
+        abortController.abort();
+      };
     },
     [searchQuery]
   );
@@ -81,7 +94,6 @@ export default function App() {
 
       <Main>
         <Box>
-          {/* {isLoading ? <Loader /> : <MoviesList movies={movies} />} */}
           {!isLoading && !error && (
             <MoviesList movies={movies} onSelectMovie={handleSelectMovie} />
           )}

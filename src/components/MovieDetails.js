@@ -64,7 +64,7 @@ export default function MovieDetails({
           }
           setMovie(data);
         } catch (error) {
-          console.error(error.message);
+          console.log(error.message);
           setError(error.message);
         } finally {
           setIsLoading(false);
@@ -74,6 +74,31 @@ export default function MovieDetails({
       getMovieDetails();
     },
     [id]
+  );
+
+  useEffect(
+    function () {
+      if (!title) return;
+      document.title = `popcornity - ${title}`;
+      return function () {
+        document.title = `popcornity`;
+      };
+    },
+    [title]
+  );
+
+  useEffect(
+    function () {
+      function handleEscapeKeyPress(event) {
+        if (event.code === `Escape`) onClose();
+      }
+      document.addEventListener(`keydown`, handleEscapeKeyPress);
+
+      return function () {
+        document.removeEventListener(`keydown`, handleEscapeKeyPress);
+      };
+    },
+    [onClose]
   );
 
   return (
