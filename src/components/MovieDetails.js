@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react';
-import { OMDB_GET_REQUEST_URL } from '../config';
-import ErrorMessage from './ErrorMessage';
-import Loader from './Loader';
-import StarRating from './StarRating';
+import { useState, useEffect } from "react";
+import { OMDB_GET_REQUEST_URL } from "../config";
+import ErrorMessage from "./ErrorMessage";
+import Loader from "./Loader";
+import StarRating from "./StarRating";
 
 export default function MovieDetails({
   id,
@@ -44,7 +44,7 @@ export default function MovieDetails({
       runtime: +runtime.split(` `).at(0),
     };
     onAddToWatched(newWatchedMovie);
-    onClose();
+    // onClose();
   }
 
   useEffect(
@@ -102,15 +102,15 @@ export default function MovieDetails({
   );
 
   return (
-    <div className='details'>
+    <div className="details">
       {!isLoading && !error && (
         <>
           <header>
-            <button className='btn-back' onClick={onClose}>
+            <button className="btn-back" onClick={onClose}>
               &larr;
             </button>
             <img src={poster} alt={`Poster of ${title} movie`}></img>
-            <div className='details-overview'>
+            <div className="details-overview">
               <h2>{title}</h2>
               <p>
                 {released} &bull; {runtime}
@@ -124,7 +124,7 @@ export default function MovieDetails({
           </header>
 
           <section>
-            <div className='rating'>
+            <div className="rating">
               {isWatched ? (
                 <p>
                   You rated this movie {watchedUserRating}
@@ -139,8 +139,9 @@ export default function MovieDetails({
                   />
                   {userRating && (
                     <button
-                      className='btn-add'
-                      onClick={handleAddMovieToWatched}>
+                      className="btn-add"
+                      onClick={handleAddMovieToWatched}
+                    >
                       Add to list
                     </button>
                   )}

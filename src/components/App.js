@@ -1,22 +1,25 @@
-import { useEffect, useState } from 'react';
-import { OMDB_GET_REQUEST_URL } from '../config';
-import Loader from './Loader';
-import ErrorMessage from './ErrorMessage';
-import NavigationBar from './NavigationBar';
-import Logo from './Logo';
-import SearchInput from './SearchInput';
-import NumberResults from './NumberResults';
-import Main from './Main';
-import Box from './Box';
-import MoviesList from './MoviesList';
-import WatchedMoviesSummary from './WatchedMoviesSummary';
-import WatchedMoviesList from './WatchedMoviesList';
-import MovieDetails from './MovieDetails';
+import { useEffect, useState, useRef } from "react";
+import { OMDB_GET_REQUEST_URL } from "../config";
+import Loader from "./Loader";
+import ErrorMessage from "./ErrorMessage";
+import NavigationBar from "./NavigationBar";
+import Logo from "./Logo";
+import SearchInput from "./SearchInput";
+import NumberResults from "./NumberResults";
+import Main from "./Main";
+import Box from "./Box";
+import MoviesList from "./MoviesList";
+import WatchedMoviesSummary from "./WatchedMoviesSummary";
+import WatchedMoviesList from "./WatchedMoviesList";
+import MovieDetails from "./MovieDetails";
 
 export default function App() {
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const [movies, setMovies] = useState([]);
-  const [watchedMovies, setWatchedMovies] = useState([]);
+  const [watchedMovies, setWatchedMovies] = useState(() => {
+    const storedWatchedMovies = localStorage.getItem(`watchedMovies`);
+    return JSON.parse(storedWatchedMovies) && [];
+  });
   const [selectedMovieId, setSelectedMovieId] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(``);
@@ -36,6 +39,10 @@ export default function App() {
   function handleDeleteMovieFromWatched(id) {
     setWatchedMovies((movies) => movies.filter((movie) => movie.imdbID !== id));
   }
+
+  useEffect(() => {
+    localStorage.setItem(`watchedMovies`, JSON.stringify(watchedMovies));
+  }, [watchedMovies]);
 
   useEffect(
     function () {
