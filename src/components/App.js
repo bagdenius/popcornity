@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { OMDB_GET_REQUEST_URL } from "../config";
 import Loader from "./Loader";
 import ErrorMessage from "./ErrorMessage";
@@ -18,7 +18,7 @@ export default function App() {
   const [movies, setMovies] = useState([]);
   const [watchedMovies, setWatchedMovies] = useState(() => {
     const storedWatchedMovies = localStorage.getItem(`watchedMovies`);
-    return JSON.parse(storedWatchedMovies) && [];
+    return JSON.parse(storedWatchedMovies) || [];
   });
   const [selectedMovieId, setSelectedMovieId] = useState(null);
   const [isLoading, setIsLoading] = useState(false);

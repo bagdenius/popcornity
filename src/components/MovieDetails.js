@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { OMDB_GET_REQUEST_URL } from "../config";
 import ErrorMessage from "./ErrorMessage";
 import Loader from "./Loader";
@@ -14,6 +14,8 @@ export default function MovieDetails({
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(``);
   const [userRating, setUserRating] = useState(``);
+
+  const countRatingDecisionsRef = useRef(0);
 
   const isWatched = watchedMovies.map((movie) => movie.imdbID).includes(id);
   const watchedUserRating = watchedMovies.find(
@@ -42,9 +44,10 @@ export default function MovieDetails({
       imdbRating: +imdbRating,
       userRating: +userRating,
       runtime: +runtime.split(` `).at(0),
+      countRatingDecisions: countRatingDecisionsRef.current,
     };
     onAddToWatched(newWatchedMovie);
-    // onClose();
+    onClose();
   }
 
   useEffect(
@@ -100,6 +103,10 @@ export default function MovieDetails({
     },
     [onClose]
   );
+
+  useEffect(() => {
+    if (userRating) countRatingDecisionsRef.current++;
+  }, [userRating]);
 
   return (
     <div className="details">
